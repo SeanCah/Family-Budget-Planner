@@ -684,6 +684,60 @@
       display: block;
     }
 
+    .paycheck-toolbar {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .month-control {
+      width: min(260px, 100%);
+    }
+
+    .schedule-actions {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .paycheck-date-value {
+      font-size: clamp(20px, 2.4vw, 30px);
+    }
+
+    .occurrence-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .occurrence-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 13px 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface-soft);
+    }
+
+    .occurrence-item strong,
+    .occurrence-item span {
+      display: block;
+    }
+
+    .occurrence-item small {
+      color: var(--muted);
+    }
+
+    .help-text {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
     .mobile-nav {
       display: none;
     }
@@ -722,7 +776,7 @@
         bottom: 12px;
         z-index: 40;
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(5, 1fr);
         gap: 6px;
         padding: 8px;
         border: 1px solid var(--line);
@@ -760,8 +814,13 @@
       .metric-grid,
       .credit-grid,
       .form-grid,
-      .flow-summary {
+      .flow-summary,
+      .occurrence-list {
         grid-template-columns: 1fr;
+      }
+
+      .paycheck-toolbar {
+        display: grid;
       }
 
       .metric-card {
@@ -789,6 +848,7 @@
       <nav class="nav" aria-label="Main navigation">
         <button class="nav-button active" data-page="dashboard"><span class="nav-icon">◫</span>Dashboard</button>
         <button class="nav-button" data-page="transactions"><span class="nav-icon">↕</span>Transactions</button>
+        <button class="nav-button" data-page="paychecks"><span class="nav-icon">$</span>Paychecks</button>
         <button class="nav-button" data-page="bills"><span class="nav-icon">□</span>Bills</button>
         <button class="nav-button" data-page="cards"><span class="nav-icon">▭</span>Credit Cards</button>
       </nav>
@@ -808,6 +868,7 @@
             <p class="page-subtitle" id="todayText"></p>
           </div>
           <div class="header-actions">
+            <button class="button button-secondary" data-open-modal="paycheckModal">Add paycheck</button>
             <button class="button button-secondary" data-open-modal="billModal">Add bill</button>
             <button class="button button-primary" data-open-modal="transactionModal">Add transaction</button>
           </div>
@@ -897,7 +958,6 @@
           </div>
           <div class="header-actions">
             <button class="button button-primary" data-open-modal="transactionModal">Add transaction</button>
-            <button data-page="paychecks">Paychecks</button>
           </div>
         </header>
 
@@ -917,6 +977,81 @@
               <tbody id="transactionsTable"></tbody>
             </table>
           </div>
+        </article>
+      </section>
+
+      <section id="paychecks" class="page">
+        <header class="page-header">
+          <div>
+            <p class="eyebrow">Income schedules</p>
+            <h2 class="page-title">Paychecks</h2>
+            <p class="page-subtitle">Plan daily, weekly, biweekly, or monthly income and review each month before it arrives.</p>
+          </div>
+          <div class="header-actions">
+            <button class="button button-primary" data-open-modal="paycheckModal">Add paycheck</button>
+          </div>
+        </header>
+
+        <div class="paycheck-toolbar">
+          <div class="field month-control">
+            <label for="paycheckMonthPicker">Projection month</label>
+            <input id="paycheckMonthPicker" type="month" />
+          </div>
+          <div class="header-actions">
+            <button class="button button-secondary" id="generatePaychecksButton" type="button">Add projected paychecks to transactions</button>
+          </div>
+        </div>
+
+        <div class="metric-grid">
+          <article class="card metric-card">
+            <span class="metric-label">Expected this month</span>
+            <strong class="metric-value" id="expectedPaycheckIncome">$0.00</strong>
+            <span class="metric-detail">Active paycheck schedules</span>
+          </article>
+          <article class="card metric-card">
+            <span class="metric-label">Deposits this month</span>
+            <strong class="metric-value" id="expectedPaycheckCount">0</strong>
+            <span class="metric-detail">Calculated payment dates</span>
+          </article>
+          <article class="card metric-card">
+            <span class="metric-label">Next paycheck</span>
+            <strong class="metric-value paycheck-date-value" id="nextPaycheckDate">None</strong>
+            <span class="metric-detail" id="nextPaycheckDetail">Add an active schedule</span>
+          </article>
+          <article class="card metric-card">
+            <span class="metric-label">Projected for year</span>
+            <strong class="metric-value" id="yearlyPaycheckIncome">$0.00</strong>
+            <span class="metric-detail" id="yearlyPaycheckDetail">Based on active schedules</span>
+          </article>
+        </div>
+
+        <article class="card table-card" style="margin-bottom: 18px;">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Income source</th>
+                  <th>Amount</th>
+                  <th>Frequency</th>
+                  <th>Starting date</th>
+                  <th>Selected month</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="paychecksTable"></tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="card panel">
+          <div class="panel-header">
+            <div>
+              <h3 class="panel-title">Expected payment dates</h3>
+              <p class="panel-subtitle" id="paycheckOccurrenceSubtitle">Calculated from your active schedules.</p>
+            </div>
+          </div>
+          <div class="occurrence-list" id="paycheckOccurrenceList"></div>
         </article>
       </section>
 
@@ -969,9 +1104,9 @@
   </div>
 
   <nav class="mobile-nav" aria-label="Mobile navigation">
-    <button data-page="paychecks">Paychecks</button>
     <button class="nav-button active" data-page="dashboard"><span class="nav-icon">◫</span>Home</button>
     <button class="nav-button" data-page="transactions"><span class="nav-icon">↕</span>Money</button>
+    <button class="nav-button" data-page="paychecks"><span class="nav-icon">$</span>Pay</button>
     <button class="nav-button" data-page="bills"><span class="nav-icon">□</span>Bills</button>
     <button class="nav-button" data-page="cards"><span class="nav-icon">▭</span>Cards</button>
   </nav>
@@ -1016,6 +1151,62 @@
         <div class="form-actions">
           <button class="button button-secondary" type="button" data-close-modal>Cancel</button>
           <button class="button button-primary" type="submit">Save transaction</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="paycheckModal" role="dialog" aria-modal="true" aria-labelledby="paycheckModalTitle">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <p class="eyebrow">Recurring income</p>
+          <h3 class="modal-title" id="paycheckModalTitle">Add paycheck</h3>
+        </div>
+        <button class="modal-close" type="button" data-close-modal aria-label="Close">×</button>
+      </div>
+      <form class="form" id="paycheckForm">
+        <input id="paycheckEditId" type="hidden" />
+        <div class="field">
+          <label for="paycheckName">Employer or income source</label>
+          <input id="paycheckName" type="text" maxlength="60" placeholder="Miami-Dade County, side job, pension" required />
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="paycheckAmount">Amount per paycheck</label>
+            <input id="paycheckAmount" type="number" min="0.01" step="0.01" placeholder="0.00" required />
+          </div>
+          <div class="field">
+            <label for="paycheckFrequency">Frequency</label>
+            <select id="paycheckFrequency" required>
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+              <option value="biweekly" selected>Biweekly</option>
+              <option value="monthly">Monthly</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="paycheckStartDate">First or next paycheck date</label>
+            <input id="paycheckStartDate" type="date" required />
+          </div>
+          <div class="field">
+            <label for="paycheckEndDate">End date, optional</label>
+            <input id="paycheckEndDate" type="date" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="paycheckStatus">Schedule status</label>
+          <select id="paycheckStatus" required>
+            <option value="active">Active</option>
+            <option value="paused">Paused</option>
+          </select>
+        </div>
+        <p class="help-text">Daily means every calendar day. Weekly repeats every 7 days. Biweekly repeats every 14 days. Monthly repeats on the same calendar day when possible.</p>
+        <div class="form-actions">
+          <button class="button button-secondary" type="button" data-close-modal>Cancel</button>
+          <button class="button button-primary" id="paycheckSubmitButton" type="submit">Save paycheck</button>
         </div>
       </form>
     </div>
@@ -1116,6 +1307,9 @@
         { id: "t2", type: "expense", name: "Groceries", category: "Food", amount: 92.64, date: currentMonthDate(4) },
         { id: "t3", type: "expense", name: "Fuel", category: "Transportation", amount: 45.30, date: currentMonthDate(5) }
       ],
+      paychecks: [
+        { id: "p1", name: "Sample Employer", amount: 1425.00, frequency: "biweekly", startDate: currentMonthDate(2), endDate: "", status: "active" }
+      ],
       bills: [
         { id: "b1", name: "Housing", amount: 900.00, dueDay: 1, paid: false },
         { id: "b2", name: "Electricity", amount: 145.00, dueDay: 8, paid: false },
@@ -1148,7 +1342,13 @@
     function loadState() {
       try {
         const saved = localStorage.getItem(STORAGE_KEY);
-        return saved ? JSON.parse(saved) : structuredClone(demoState);
+        const loaded = saved ? JSON.parse(saved) : structuredClone(demoState);
+        return {
+          transactions: Array.isArray(loaded.transactions) ? loaded.transactions : [],
+          paychecks: Array.isArray(loaded.paychecks) ? loaded.paychecks : [],
+          bills: Array.isArray(loaded.bills) ? loaded.bills : [],
+          cards: Array.isArray(loaded.cards) ? loaded.cards : []
+        };
       } catch (error) {
         console.error("Could not load saved data", error);
         return structuredClone(demoState);
@@ -1239,6 +1439,205 @@
         day: "numeric",
         year: "numeric"
       }).format(now);
+    }
+
+    function parseLocalDate(dateString) {
+      if (!dateString) return null;
+      const [year, month, day] = dateString.split("-").map(Number);
+      return new Date(year, month - 1, day, 12, 0, 0, 0);
+    }
+
+    function addDays(date, days) {
+      const result = new Date(date);
+      result.setDate(result.getDate() + days);
+      return result;
+    }
+
+    function monthStart(monthValue) {
+      const [year, month] = monthValue.split("-").map(Number);
+      return new Date(year, month - 1, 1, 12, 0, 0, 0);
+    }
+
+    function monthEnd(monthValue) {
+      const start = monthStart(monthValue);
+      return new Date(start.getFullYear(), start.getMonth() + 1, 0, 12, 0, 0, 0);
+    }
+
+    function monthlyOccurrence(anchor, index) {
+      const targetMonth = anchor.getMonth() + index;
+      const first = new Date(anchor.getFullYear(), targetMonth, 1, 12, 0, 0, 0);
+      const day = Math.min(anchor.getDate(), daysInMonth(first.getFullYear(), first.getMonth()));
+      return new Date(first.getFullYear(), first.getMonth(), day, 12, 0, 0, 0);
+    }
+
+    function paycheckFrequencyLabel(frequency) {
+      return ({
+        daily: "Daily",
+        weekly: "Weekly",
+        biweekly: "Biweekly",
+        monthly: "Monthly"
+      })[frequency] || frequency;
+    }
+
+    function getPaycheckOccurrences(schedule, rangeStart, rangeEnd) {
+      if (!schedule || schedule.status !== "active") return [];
+      const anchor = parseLocalDate(schedule.startDate);
+      if (!anchor || anchor > rangeEnd) return [];
+      const scheduleEnd = parseLocalDate(schedule.endDate);
+      const effectiveEnd = scheduleEnd && scheduleEnd < rangeEnd ? scheduleEnd : rangeEnd;
+      if (effectiveEnd < rangeStart || effectiveEnd < anchor) return [];
+
+      const occurrences = [];
+
+      if (schedule.frequency === "monthly") {
+        let index = Math.max(0,
+          (rangeStart.getFullYear() - anchor.getFullYear()) * 12 +
+          (rangeStart.getMonth() - anchor.getMonth()) - 1
+        );
+        let cursor = monthlyOccurrence(anchor, index);
+        while (cursor < rangeStart) {
+          index += 1;
+          cursor = monthlyOccurrence(anchor, index);
+        }
+        while (cursor <= effectiveEnd && occurrences.length < 500) {
+          if (cursor >= anchor) occurrences.push(new Date(cursor));
+          index += 1;
+          cursor = monthlyOccurrence(anchor, index);
+        }
+        return occurrences;
+      }
+
+      const intervalDays = schedule.frequency === "daily" ? 1 : schedule.frequency === "weekly" ? 7 : 14;
+      const millisecondsPerDay = 86400000;
+      const daysFromAnchor = Math.floor((rangeStart - anchor) / millisecondsPerDay);
+      const jumps = Math.max(0, Math.floor(daysFromAnchor / intervalDays));
+      let cursor = addDays(anchor, jumps * intervalDays);
+      while (cursor < rangeStart) cursor = addDays(cursor, intervalDays);
+      while (cursor <= effectiveEnd && occurrences.length < 500) {
+        occurrences.push(new Date(cursor));
+        cursor = addDays(cursor, intervalDays);
+      }
+      return occurrences;
+    }
+
+    function selectedPaycheckMonth() {
+      return document.getElementById("paycheckMonthPicker").value || toDateInputValue(new Date()).slice(0, 7);
+    }
+
+    function paycheckOccurrencesForSelectedMonth() {
+      const monthValue = selectedPaycheckMonth();
+      const start = monthStart(monthValue);
+      const end = monthEnd(monthValue);
+      return state.paychecks.flatMap(schedule =>
+        getPaycheckOccurrences(schedule, start, end).map(date => ({ schedule, date }))
+      ).sort((a, b) => a.date - b.date || a.schedule.name.localeCompare(b.schedule.name));
+    }
+
+    function getNextScheduledPaycheck() {
+      const today = new Date();
+      today.setHours(12, 0, 0, 0);
+      const horizon = new Date(today.getFullYear() + 5, today.getMonth(), today.getDate(), 12, 0, 0, 0);
+      return state.paychecks
+        .filter(schedule => schedule.status === "active")
+        .map(schedule => {
+          const occurrence = getPaycheckOccurrences(schedule, today, horizon)[0];
+          return occurrence ? { schedule, date: occurrence } : null;
+        })
+        .filter(Boolean)
+        .sort((a, b) => a.date - b.date)[0] || null;
+    }
+
+    function renderPaychecks() {
+      const monthValue = selectedPaycheckMonth();
+      const selectedYear = Number(monthValue.slice(0, 4));
+      const occurrences = paycheckOccurrencesForSelectedMonth();
+      const expectedIncome = occurrences.reduce((sum, item) => sum + Number(item.schedule.amount), 0);
+      const yearStart = new Date(selectedYear, 0, 1, 12, 0, 0, 0);
+      const yearEnd = new Date(selectedYear, 11, 31, 12, 0, 0, 0);
+      const yearlyIncome = state.paychecks.reduce((sum, schedule) => {
+        return sum + getPaycheckOccurrences(schedule, yearStart, yearEnd).length * Number(schedule.amount);
+      }, 0);
+      const next = getNextScheduledPaycheck();
+
+      document.getElementById("expectedPaycheckIncome").textContent = currency(expectedIncome);
+      document.getElementById("expectedPaycheckCount").textContent = String(occurrences.length);
+      document.getElementById("yearlyPaycheckIncome").textContent = currency(yearlyIncome);
+      document.getElementById("yearlyPaycheckDetail").textContent = `Projected for ${selectedYear}`;
+      document.getElementById("nextPaycheckDate").textContent = next ? formatDate(toDateInputValue(next.date)) : "None";
+      document.getElementById("nextPaycheckDetail").textContent = next
+        ? `${next.schedule.name} · ${currency(next.schedule.amount)}`
+        : "Add an active schedule";
+
+      const monthLabel = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric" }).format(monthStart(monthValue));
+      document.getElementById("paycheckOccurrenceSubtitle").textContent = `Expected payments for ${monthLabel}.`;
+
+      const tbody = document.getElementById("paychecksTable");
+      if (!state.paychecks.length) {
+        tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state">No paycheck schedules yet.</div></td></tr>';
+      } else {
+        tbody.innerHTML = state.paychecks.map(schedule => {
+          const scheduleOccurrences = occurrences.filter(item => item.schedule.id === schedule.id);
+          const scheduleTotal = scheduleOccurrences.length * Number(schedule.amount);
+          return `
+            <tr>
+              <td><strong>${escapeHtml(schedule.name)}</strong></td>
+              <td><strong>${currency(schedule.amount)}</strong></td>
+              <td>${paycheckFrequencyLabel(schedule.frequency)}</td>
+              <td>${formatDate(schedule.startDate)}</td>
+              <td>${scheduleOccurrences.length} deposits · ${currency(scheduleTotal)}</td>
+              <td><span class="pill ${schedule.status === "active" ? "pill-income" : "pill-due"}">${schedule.status}</span></td>
+              <td>
+                <div class="schedule-actions">
+                  <button class="button button-secondary button-small" type="button" data-edit-paycheck="${schedule.id}">Edit</button>
+                  <button class="button button-secondary button-small" type="button" data-toggle-paycheck="${schedule.id}">${schedule.status === "active" ? "Pause" : "Activate"}</button>
+                  <button class="icon-button" type="button" data-delete-paycheck="${schedule.id}">Delete</button>
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join("");
+      }
+
+      const occurrenceList = document.getElementById("paycheckOccurrenceList");
+      if (!occurrences.length) {
+        occurrenceList.innerHTML = '<div class="empty-state">No active paycheck dates in this month.</div>';
+      } else {
+        occurrenceList.innerHTML = occurrences.map(item => `
+          <div class="occurrence-item">
+            <div>
+              <strong>${formatDate(toDateInputValue(item.date))}</strong>
+              <small>${escapeHtml(item.schedule.name)} · ${paycheckFrequencyLabel(item.schedule.frequency)}</small>
+            </div>
+            <strong class="positive">${currency(item.schedule.amount)}</strong>
+          </div>
+        `).join("");
+      }
+    }
+
+    function resetPaycheckForm() {
+      const form = document.getElementById("paycheckForm");
+      form.reset();
+      document.getElementById("paycheckEditId").value = "";
+      document.getElementById("paycheckStartDate").value = toDateInputValue(new Date());
+      document.getElementById("paycheckFrequency").value = "biweekly";
+      document.getElementById("paycheckStatus").value = "active";
+      document.getElementById("paycheckModalTitle").textContent = "Add paycheck";
+      document.getElementById("paycheckSubmitButton").textContent = "Save paycheck";
+    }
+
+    function editPaycheck(scheduleId) {
+      const schedule = state.paychecks.find(item => item.id === scheduleId);
+      if (!schedule) return;
+      document.getElementById("paycheckEditId").value = schedule.id;
+      document.getElementById("paycheckName").value = schedule.name;
+      document.getElementById("paycheckAmount").value = schedule.amount;
+      document.getElementById("paycheckFrequency").value = schedule.frequency;
+      document.getElementById("paycheckStartDate").value = schedule.startDate;
+      document.getElementById("paycheckEndDate").value = schedule.endDate || "";
+      document.getElementById("paycheckStatus").value = schedule.status;
+      document.getElementById("paycheckModalTitle").textContent = "Edit paycheck";
+      document.getElementById("paycheckSubmitButton").textContent = "Save changes";
+      openModal("paycheckModal");
     }
 
     function renderDashboard() {
@@ -1420,6 +1819,7 @@
       setGreeting();
       renderDashboard();
       renderTransactionsTable();
+      renderPaychecks();
       renderBillsTable();
       renderCards();
     }
@@ -1464,7 +1864,10 @@
       if (pageLink) navigateTo(pageLink.dataset.pageLink);
 
       const modalButton = event.target.closest("[data-open-modal]");
-      if (modalButton) openModal(modalButton.dataset.openModal);
+      if (modalButton) {
+        if (modalButton.dataset.openModal === "paycheckModal") resetPaycheckForm();
+        openModal(modalButton.dataset.openModal);
+      }
 
       const closeButton = event.target.closest("[data-close-modal]");
       if (closeButton) closeModal(closeButton.closest(".modal-backdrop"));
@@ -1477,6 +1880,26 @@
         saveState();
         renderAll();
         showToast("Transaction removed");
+      }
+
+      const paycheckEdit = event.target.closest("[data-edit-paycheck]");
+      if (paycheckEdit) editPaycheck(paycheckEdit.dataset.editPaycheck);
+
+      const paycheckToggle = event.target.closest("[data-toggle-paycheck]");
+      if (paycheckToggle) {
+        const schedule = state.paychecks.find(item => item.id === paycheckToggle.dataset.togglePaycheck);
+        if (schedule) schedule.status = schedule.status === "active" ? "paused" : "active";
+        saveState();
+        renderAll();
+        showToast(schedule?.status === "active" ? "Paycheck schedule activated" : "Paycheck schedule paused");
+      }
+
+      const paycheckDelete = event.target.closest("[data-delete-paycheck]");
+      if (paycheckDelete) {
+        state.paychecks = state.paychecks.filter(item => item.id !== paycheckDelete.dataset.deletePaycheck);
+        saveState();
+        renderAll();
+        showToast("Paycheck schedule removed");
       }
 
       const billToggle = event.target.closest("[data-toggle-bill]");
@@ -1529,6 +1952,67 @@
       showToast("Transaction saved");
     });
 
+    document.getElementById("paycheckForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const editId = document.getElementById("paycheckEditId").value;
+      const schedule = {
+        id: editId || makeId("paycheck"),
+        name: document.getElementById("paycheckName").value.trim(),
+        amount: Number(document.getElementById("paycheckAmount").value),
+        frequency: document.getElementById("paycheckFrequency").value,
+        startDate: document.getElementById("paycheckStartDate").value,
+        endDate: document.getElementById("paycheckEndDate").value,
+        status: document.getElementById("paycheckStatus").value
+      };
+
+      if (schedule.endDate && schedule.endDate < schedule.startDate) {
+        showToast("End date must be after the starting date");
+        return;
+      }
+
+      if (editId) {
+        const index = state.paychecks.findIndex(item => item.id === editId);
+        if (index >= 0) state.paychecks[index] = schedule;
+      } else {
+        state.paychecks.push(schedule);
+      }
+
+      saveState();
+      closeModal(document.getElementById("paycheckModal"));
+      resetPaycheckForm();
+      renderAll();
+      showToast(editId ? "Paycheck schedule updated" : "Paycheck schedule saved");
+    });
+
+    document.getElementById("paycheckMonthPicker").addEventListener("change", renderPaychecks);
+
+    document.getElementById("generatePaychecksButton").addEventListener("click", () => {
+      const occurrences = paycheckOccurrencesForSelectedMonth();
+      let added = 0;
+
+      occurrences.forEach(item => {
+        const date = toDateInputValue(item.date);
+        const exists = state.transactions.some(transaction =>
+          transaction.paycheckScheduleId === item.schedule.id && transaction.date === date
+        );
+        if (exists) return;
+        state.transactions.push({
+          id: makeId("transaction"),
+          type: "income",
+          name: item.schedule.name,
+          category: "Paycheck",
+          amount: Number(item.schedule.amount),
+          date,
+          paycheckScheduleId: item.schedule.id
+        });
+        added += 1;
+      });
+
+      saveState();
+      renderAll();
+      showToast(added ? `${added} paycheck ${added === 1 ? "entry" : "entries"} added` : "No new paycheck entries to add");
+    });
+
     document.getElementById("billForm").addEventListener("submit", event => {
       event.preventDefault();
       state.bills.push({
@@ -1565,6 +2049,8 @@
     });
 
     document.getElementById("transactionDate").value = toDateInputValue(new Date());
+    document.getElementById("paycheckMonthPicker").value = toDateInputValue(new Date()).slice(0, 7);
+    resetPaycheckForm();
     renderAll();
   </script>
 </body>
