@@ -80,28 +80,6 @@ const demoState = {
 
 let state = loadState();
 
-function currentMonthDate(day) {
-  const date = new Date();
-
-  date.setDate(
-    Math.min(day, daysInMonth(date.getFullYear(), date.getMonth()))
-  );
-
-  return toDateInputValue(date);
-}
-
-function daysInMonth(year, month) {
-  return new Date(year, month + 1, 0).getDate();
-}
-
-function toDateInputValue(date) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-
-  return `${year}-${month}-${day}`;
-}
-
 function loadState() {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
