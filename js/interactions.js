@@ -1,3 +1,4 @@
+function registerInteractions() {
 document.addEventListener("click", (event) => {
   const pageButton = event.target.closest(
     "[data-page]"
@@ -206,3 +207,4 @@ document.addEventListener(
     }
   }
 );
+}
