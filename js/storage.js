@@ -1,6 +1,6 @@
-var STORAGE_KEY = "ledger-family-budget-v1";
+window.STORAGE_KEY = "ledger-family-budget-v1";
 
-var demoState = {
+window.demoState = {
   transactions: [
     {
       id: "t1",
@@ -78,15 +78,15 @@ var demoState = {
   ]
 };
 
-var state = loadState();
-
-function loadState() {
+window.loadState = function loadState() {
   try {
-    const saved = localStorage.getItem(STORAGE_KEY);
+    const saved = localStorage.getItem(
+      window.STORAGE_KEY
+    );
 
     const loaded = saved
       ? JSON.parse(saved)
-      : structuredClone(demoState);
+      : structuredClone(window.demoState);
 
     return {
       transactions: Array.isArray(loaded.transactions)
@@ -111,13 +111,15 @@ function loadState() {
       error
     );
 
-    return structuredClone(demoState);
+    return structuredClone(window.demoState);
   }
-}
+};
 
-function saveState() {
+window.state = window.loadState();
+
+window.saveState = function saveState() {
   localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(state)
+    window.STORAGE_KEY,
+    JSON.stringify(window.state)
   );
-}
+};
