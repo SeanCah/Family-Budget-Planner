@@ -1,6 +1,6 @@
-const STORAGE_KEY = "ledger-family-budget-v1";
+var STORAGE_KEY = "ledger-family-budget-v1";
 
-const demoState = {
+var demoState = {
   transactions: [
     {
       id: "t1",
@@ -78,7 +78,7 @@ const demoState = {
   ]
 };
 
-let state = loadState();
+var state = loadState();
 
 function loadState() {
   try {
