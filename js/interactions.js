@@ -193,6 +193,25 @@ document.addEventListener("click", (event) => {
 
     showToast("Credit card removed");
   }
+  const savingsGoalDelete =
+  event.target.closest(
+    "[data-delete-savings-goal]"
+  );
+
+if (savingsGoalDelete) {
+  state.savingsGoals =
+    state.savingsGoals.filter(
+      (goal) =>
+        goal.id !==
+        savingsGoalDelete.dataset
+          .deleteSavingsGoal
+    );
+
+  saveState();
+  renderAll();
+
+  showToast("Savings goal removed");
+}
 });
 
 document.addEventListener(
