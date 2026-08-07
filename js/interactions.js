@@ -20,7 +20,7 @@ document.addEventListener("click", (event) => {
     "[data-open-modal]"
   );
 
-  iif (modalButton) {
+  if (modalButton) {
   if (
     modalButton.dataset.openModal ===
     "paycheckModal"
