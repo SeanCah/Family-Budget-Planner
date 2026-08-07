@@ -768,7 +768,7 @@
         bottom: 12px;
         z-index: 40;
         display: grid;
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: repeat(6, 1fr);
         gap: 6px;
         padding: 8px;
         border: 1px solid var(--line);
