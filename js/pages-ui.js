@@ -402,6 +402,14 @@ function renderSavingsGoals() {
 >
   Edit
 </button>
+<button
+  class="icon-button"
+  type="button"
+  data-delete-savings-goal="${goal.id}"
+  aria-label="Delete savings goal"
+>
+  Delete
+</button>
 </div>
         </div>
       `;
