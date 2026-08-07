@@ -348,10 +348,67 @@ function registerFormHandlers() {
 
       closeModal(
         document.getElementById(
+                closeModal(
+        document.getElementById(
           "savingsGoalModal"
         )
       );
 
+      renderAll();
+
       showToast("Savings goal saved");
+    });
+    document
+    .getElementById("savingsContributionForm")
+    .addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const goalId = document.getElementById(
+        "savingsContributionGoalId"
+      ).value;
+
+      const amount = Number(
+        document.getElementById(
+          "savingsContributionAmount"
+        ).value
+      );
+
+      const goal = state.savingsGoals.find(
+        (item) => item.id === goalId
+      );
+
+      if (!goal) {
+        showToast("Savings goal not found");
+        return;
+      }
+
+      const remaining =
+        Number(goal.targetAmount) -
+        Number(goal.savedAmount);
+
+      if (amount > remaining) {
+        showToast(
+          "Contribution is higher than the amount remaining"
+        );
+
+        return;
+      }
+
+      goal.savedAmount =
+        Number(goal.savedAmount) + amount;
+
+      saveState();
+
+      event.target.reset();
+
+      closeModal(
+        document.getElementById(
+          "savingsContributionModal"
+        )
+      );
+
+      renderAll();
+
+      showToast("Savings updated");
     });
 }
