@@ -193,6 +193,26 @@ document.addEventListener("click", (event) => {
 
     showToast("Credit card removed");
   }
+  const savingsFundsButton =
+  event.target.closest(
+    "[data-add-savings-funds]"
+  );
+
+if (savingsFundsButton) {
+  document.getElementById(
+    "savingsContributionGoalId"
+  ).value =
+    savingsFundsButton.dataset
+      .addSavingsFunds;
+
+  document.getElementById(
+    "savingsContributionAmount"
+  ).value = "";
+
+  openModal(
+    "savingsContributionModal"
+  );
+}
   const savingsGoalDelete =
   event.target.closest(
     "[data-delete-savings-goal]"
