@@ -65,18 +65,17 @@ window.demoState = {
   ],
 
   cards: [
-    cards: [
-    {
-      id: "c1",
-      bank: "Sample Bank",
-      name: "Everyday Card",
-      limit: 5000,
-      balance: 350,
-      apr: 24.99,
-      dueDay: 21,
-      statementDay: 26
-    }
-  ],
+  {
+    id: "c1",
+    bank: "Sample Bank",
+    name: "Everyday Card",
+    limit: 5000,
+    balance: 350,
+    apr: 24.99,
+    dueDay: 21,
+    statementDay: 26
+  }
+],
 
   savingsGoals: []
 };
@@ -105,11 +104,12 @@ window.loadState = function loadState() {
         : [],
 
       cards: Array.isArray(loaded.cards)
-        ? loaded.cards
-        : []
-      savingsGoals: Array.isArray(loaded.savingsGoals)
-        ? loaded.savingsGoals
-        : []
+  ? loaded.cards
+  : [],
+
+savingsGoals: Array.isArray(loaded.savingsGoals)
+  ? loaded.savingsGoals
+  : []
     };
   } catch (error) {
     console.error(
