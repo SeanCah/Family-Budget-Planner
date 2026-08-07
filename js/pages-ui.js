@@ -361,9 +361,17 @@ function renderSavingsGoals() {
           </div>
 
           <div class="item-value">
-            <div>
+  <div>
     ${progress.toFixed(0)}%
   </div>
+
+  <button
+    class="button button-secondary button-small"
+    type="button"
+    data-add-savings-funds="${goal.id}"
+  >
+    Add funds
+  </button>
 
   <button
     class="icon-button"
