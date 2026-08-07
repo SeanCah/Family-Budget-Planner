@@ -65,6 +65,7 @@ window.demoState = {
   ],
 
   cards: [
+    cards: [
     {
       id: "c1",
       bank: "Sample Bank",
@@ -75,7 +76,9 @@ window.demoState = {
       dueDay: 21,
       statementDay: 26
     }
-  ]
+  ],
+
+  savingsGoals: []
 };
 
 window.loadState = function loadState() {
@@ -103,6 +106,9 @@ window.loadState = function loadState() {
 
       cards: Array.isArray(loaded.cards)
         ? loaded.cards
+        : []
+      savingsGoals: Array.isArray(loaded.savingsGoals)
+        ? loaded.savingsGoals
         : []
     };
   } catch (error) {
