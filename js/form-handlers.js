@@ -327,36 +327,34 @@ function registerFormHandlers() {
       }
 
       state.savingsGoals.push({
-        id: makeId("savings"),
+  id: makeId("savings"),
 
-        name: document
-          .getElementById("savingsGoalName")
-          .value.trim(),
+  name: document
+    .getElementById("savingsGoalName")
+    .value.trim(),
 
-        targetAmount,
+  targetAmount,
 
-        savedAmount,
+  savedAmount,
 
-        targetDate: document.getElementById(
-          "savingsGoalDate"
-        ).value
-      });
+  targetDate: document.getElementById(
+    "savingsGoalDate"
+  ).value
+});
 
-      saveState();
+saveState();
 
-      event.target.reset();
+event.target.reset();
 
-      closeModal(
-        document.getElementById(
-                closeModal(
-        document.getElementById(
-          "savingsGoalModal"
-        )
-      );
+closeModal(
+  document.getElementById(
+    "savingsGoalModal"
+  )
+);
 
-      renderAll();
+renderAll();
 
-      showToast("Savings goal saved");
+showToast("Savings goal saved");
     });
     document
     .getElementById("savingsContributionForm")
