@@ -276,14 +276,23 @@
       </section>
       <section id="savings" class="page">
   <header class="page-header">
-    <div>
-      <p class="eyebrow">Savings planning</p>
-      <h2 class="page-title">Savings</h2>
-      <p class="page-subtitle">
-        Set savings goals, track your progress, and plan where your extra money should go.
-      </p>
-    </div>
-  </header>
+  <div>
+    <p class="eyebrow">Savings planning</p>
+    <h2 class="page-title">Savings</h2>
+    <p class="page-subtitle">
+      Set savings goals, track your progress, and plan where your extra money should go.
+    </p>
+  </div>
+
+  <div class="header-actions">
+    <button
+      class="button button-primary"
+      data-open-modal="savingsGoalModal"
+    >
+      Add savings goal
+    </button>
+  </div>
+</header>
 
   <article class="card panel">
     <div class="panel-header">
@@ -496,7 +505,97 @@
       </form>
     </div>
   </div>
+  <div
+  class="modal-backdrop"
+  id="savingsGoalModal"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="savingsGoalModalTitle"
+>
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <p class="eyebrow">New savings goal</p>
+        <h3 class="modal-title" id="savingsGoalModalTitle">
+          Add savings goal
+        </h3>
+      </div>
 
+      <button
+        class="modal-close"
+        type="button"
+        data-close-modal
+        aria-label="Close"
+      >
+        ×
+      </button>
+    </div>
+
+    <form class="form" id="savingsGoalForm">
+      <div class="field">
+        <label for="savingsGoalName">Goal name</label>
+        <input
+          id="savingsGoalName"
+          type="text"
+          maxlength="60"
+          placeholder="Emergency fund, vacation, new car"
+          required
+        />
+      </div>
+
+      <div class="form-grid">
+        <div class="field">
+          <label for="savingsGoalTarget">Target amount</label>
+          <input
+            id="savingsGoalTarget"
+            type="number"
+            min="0.01"
+            step="0.01"
+            placeholder="5000.00"
+            required
+          />
+        </div>
+
+        <div class="field">
+          <label for="savingsGoalSaved">Already saved</label>
+          <input
+            id="savingsGoalSaved"
+            type="number"
+            min="0"
+            step="0.01"
+            value="0"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="savingsGoalDate">Target date</label>
+        <input
+          id="savingsGoalDate"
+          type="date"
+        />
+      </div>
+
+      <div class="form-actions">
+        <button
+          class="button button-secondary"
+          type="button"
+          data-close-modal
+        >
+          Cancel
+        </button>
+
+        <button
+          class="button button-primary"
+          type="submit"
+        >
+          Save goal
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script src="js/navigation.js"></script>
