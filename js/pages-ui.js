@@ -301,6 +301,48 @@ function renderCards() {
     })
     .join("");
 }
+function renderSavingsSummary() {
+  const totalSaved = state.savingsGoals.reduce(
+    (sum, goal) =>
+      sum + Number(goal.savedAmount),
+    0
+  );
+
+  const totalTarget = state.savingsGoals.reduce(
+    (sum, goal) =>
+      sum + Number(goal.targetAmount),
+    0
+  );
+
+  const remaining = Math.max(
+    totalTarget - totalSaved,
+    0
+  );
+
+  const progress =
+    totalTarget > 0
+      ? Math.min(
+          (totalSaved / totalTarget) * 100,
+          100
+        )
+      : 0;
+
+  document.getElementById(
+    "savingsTotalSaved"
+  ).textContent = currency(totalSaved);
+
+  document.getElementById(
+    "savingsTotalTarget"
+  ).textContent = currency(totalTarget);
+
+  document.getElementById(
+    "savingsRemaining"
+  ).textContent = currency(remaining);
+
+  document.getElementById(
+    "savingsOverallProgress"
+  ).textContent = `${progress.toFixed(0)}%`;
+}
 function renderSavingsGoals() {
   const list = document.getElementById(
     "savingsGoalsList"
@@ -423,5 +465,6 @@ function renderAll() {
   renderPaychecks();
   renderBillsTable();
   renderCards();
+  renderSavingsSummary();
   renderSavingsGoals();
 }
