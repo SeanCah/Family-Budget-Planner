@@ -361,8 +361,19 @@ function renderSavingsGoals() {
           </div>
 
           <div class="item-value">
-            ${progress.toFixed(0)}%
-          </div>
+            <div>
+    ${progress.toFixed(0)}%
+  </div>
+
+  <button
+    class="icon-button"
+    type="button"
+    data-delete-savings-goal="${goal.id}"
+    aria-label="Delete savings goal"
+  >
+    Delete
+  </button>
+</div>
         </div>
       `;
     })
