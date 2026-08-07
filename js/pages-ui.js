@@ -357,6 +357,16 @@ function renderSavingsGoals() {
                 ${currency(target)}
                 · ${dateText}
               </p>
+              <div
+  class="progress"
+  aria-label="Savings goal progress"
+  style="margin-top: 8px;"
+>
+  <div
+    class="progress-fill"
+    style="width: ${progress}%"
+  ></div>
+</div>
             </div>
           </div>
 
