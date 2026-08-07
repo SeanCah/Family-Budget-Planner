@@ -193,6 +193,51 @@ document.addEventListener("click", (event) => {
 
     showToast("Credit card removed");
   }
+  const savingsGoalEdit =
+  event.target.closest(
+    "[data-edit-savings-goal]"
+  );
+
+if (savingsGoalEdit) {
+  const goal = state.savingsGoals.find(
+    (item) =>
+      item.id ===
+      savingsGoalEdit.dataset
+        .editSavingsGoal
+  );
+
+  if (goal) {
+    document.getElementById(
+      "savingsGoalEditId"
+    ).value = goal.id;
+
+    document.getElementById(
+      "savingsGoalName"
+    ).value = goal.name;
+
+    document.getElementById(
+      "savingsGoalTarget"
+    ).value = goal.targetAmount;
+
+    document.getElementById(
+      "savingsGoalSaved"
+    ).value = goal.savedAmount;
+
+    document.getElementById(
+      "savingsGoalDate"
+    ).value = goal.targetDate || "";
+
+    document.getElementById(
+      "savingsGoalModalTitle"
+    ).textContent = "Edit savings goal";
+
+    document.getElementById(
+      "savingsGoalSubmitButton"
+    ).textContent = "Update goal";
+
+    openModal("savingsGoalModal");
+  }
+}
   const savingsFundsButton =
   event.target.closest(
     "[data-add-savings-funds]"
