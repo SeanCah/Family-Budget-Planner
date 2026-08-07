@@ -534,6 +534,10 @@
     </div>
 
     <form class="form" id="savingsGoalForm">
+      <input
+  id="savingsGoalEditId"
+  type="hidden"
+/>
       <div class="field">
         <label for="savingsGoalName">Goal name</label>
         <input
@@ -589,11 +593,12 @@
         </button>
 
         <button
-          class="button button-primary"
-          type="submit"
-        >
-          Save goal
-        </button>
+  class="button button-primary"
+  id="savingsGoalSubmitButton"
+  type="submit"
+>
+  Save goal
+</button>
       </div>
     </form>
   </div>
