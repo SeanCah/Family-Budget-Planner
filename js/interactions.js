@@ -20,18 +20,35 @@ document.addEventListener("click", (event) => {
     "[data-open-modal]"
   );
 
-  if (modalButton) {
-    if (
-      modalButton.dataset.openModal ===
-      "paycheckModal"
-    ) {
-      resetPaycheckForm();
-    }
-
-    openModal(
-      modalButton.dataset.openModal
-    );
+  iif (modalButton) {
+  if (
+    modalButton.dataset.openModal ===
+    "paycheckModal"
+  ) {
+    resetPaycheckForm();
   }
+
+  if (
+    modalButton.dataset.openModal ===
+    "savingsGoalModal"
+  ) {
+    document
+      .getElementById("savingsGoalForm")
+      .reset();
+
+    document.getElementById(
+      "savingsGoalModalTitle"
+    ).textContent = "Add savings goal";
+
+    document.getElementById(
+      "savingsGoalSubmitButton"
+    ).textContent = "Save goal";
+  }
+
+  openModal(
+    modalButton.dataset.openModal
+  );
+}
 
   const closeButton = event.target.closest(
     "[data-close-modal]"
