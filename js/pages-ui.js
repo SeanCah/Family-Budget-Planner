@@ -335,6 +335,9 @@ function renderSavingsGoals() {
               100
             )
           : 0;
+      
+      const complete =
+        target > 0 && saved >= target;
 
       const dateText = goal.targetDate
         ? `Target ${formatDate(goal.targetDate)}`
@@ -375,13 +378,22 @@ function renderSavingsGoals() {
     ${progress.toFixed(0)}%
   </div>
 
-  <button
-    class="button button-secondary button-small"
-    type="button"
-    data-add-savings-funds="${goal.id}"
-  >
-    Add funds
-  </button>
+  ${complete
+  ? `
+    <span class="pill pill-paid">
+      Goal reached
+    </span>
+  `
+  : `
+    <button
+      class="button button-secondary button-small"
+      type="button"
+      data-add-savings-funds="${goal.id}"
+    >
+      Add funds
+    </button>
+  `
+}
 
   <button
     class="icon-button"
