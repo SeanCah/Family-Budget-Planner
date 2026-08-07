@@ -301,4 +301,57 @@ function registerFormHandlers() {
 
       showToast("Credit card saved");
     });
+    document
+    .getElementById("savingsGoalForm")
+    .addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const targetAmount = Number(
+        document.getElementById(
+          "savingsGoalTarget"
+        ).value
+      );
+
+      const savedAmount = Number(
+        document.getElementById(
+          "savingsGoalSaved"
+        ).value
+      );
+
+      if (savedAmount > targetAmount) {
+        showToast(
+          "Saved amount cannot be higher than the goal"
+        );
+
+        return;
+      }
+
+      state.savingsGoals.push({
+        id: makeId("savings"),
+
+        name: document
+          .getElementById("savingsGoalName")
+          .value.trim(),
+
+        targetAmount,
+
+        savedAmount,
+
+        targetDate: document.getElementById(
+          "savingsGoalDate"
+        ).value
+      });
+
+      saveState();
+
+      event.target.reset();
+
+      closeModal(
+        document.getElementById(
+          "savingsGoalModal"
+        )
+      );
+
+      showToast("Savings goal saved");
+    });
 }
