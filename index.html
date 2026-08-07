@@ -598,6 +598,75 @@
     </form>
   </div>
 </div>
+  <div
+  class="modal-backdrop"
+  id="savingsContributionModal"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="savingsContributionModalTitle"
+>
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <p class="eyebrow">Savings contribution</p>
+        <h3
+          class="modal-title"
+          id="savingsContributionModalTitle"
+        >
+          Add funds
+        </h3>
+      </div>
+
+      <button
+        class="modal-close"
+        type="button"
+        data-close-modal
+        aria-label="Close"
+      >
+        ×
+      </button>
+    </div>
+
+    <form class="form" id="savingsContributionForm">
+      <input
+        id="savingsContributionGoalId"
+        type="hidden"
+      />
+
+      <div class="field">
+        <label for="savingsContributionAmount">
+          Amount to add
+        </label>
+
+        <input
+          id="savingsContributionAmount"
+          type="number"
+          min="0.01"
+          step="0.01"
+          placeholder="100.00"
+          required
+        />
+      </div>
+
+      <div class="form-actions">
+        <button
+          class="button button-secondary"
+          type="button"
+          data-close-modal
+        >
+          Cancel
+        </button>
+
+        <button
+          class="button button-primary"
+          type="submit"
+        >
+          Add funds
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script src="js/navigation.js"></script>
