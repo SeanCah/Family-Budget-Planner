@@ -301,10 +301,14 @@ function registerFormHandlers() {
 
       showToast("Credit card saved");
     });
-    document
+      document
     .getElementById("savingsGoalForm")
     .addEventListener("submit", (event) => {
       event.preventDefault();
+
+      const editId = document.getElementById(
+        "savingsGoalEditId"
+      ).value;
 
       const targetAmount = Number(
         document.getElementById(
@@ -326,31 +330,61 @@ function registerFormHandlers() {
         return;
       }
 
-      state.savingsGoals.push({
-  id: makeId("savings"),
+      const goal = {
+        id: editId || makeId("savings"),
 
-  name: document
-    .getElementById("savingsGoalName")
-    .value.trim(),
+        name: document
+          .getElementById("savingsGoalName")
+          .value.trim(),
 
-  targetAmount,
+        targetAmount,
 
-  savedAmount,
+        savedAmount,
 
-  targetDate: document.getElementById(
-    "savingsGoalDate"
-  ).value
-});
+        targetDate: document.getElementById(
+          "savingsGoalDate"
+        ).value
+      };
 
-saveState();
+      if (editId) {
+        const index =
+          state.savingsGoals.findIndex(
+            (item) => item.id === editId
+          );
 
-event.target.reset();
+        if (index >= 0) {
+          state.savingsGoals[index] = goal;
+        }
+      } else {
+        state.savingsGoals.push(goal);
+      }
 
-closeModal(
-  document.getElementById(
-    "savingsGoalModal"
-  )
-);
+      saveState();
+
+      event.target.reset();
+
+      closeModal(
+        document.getElementById(
+          "savingsGoalModal"
+        )
+      );
+
+      document.getElementById(
+        "savingsGoalModalTitle"
+      ).textContent = "Add savings goal";
+
+      document.getElementById(
+        "savingsGoalSubmitButton"
+      ).textContent = "Save goal";
+
+      renderAll();
+
+      showToast(
+        editId
+          ? "Savings goal updated"
+          : "Savings goal saved"
+      );
+    });
 
 renderAll();
 
