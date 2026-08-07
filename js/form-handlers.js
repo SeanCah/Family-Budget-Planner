@@ -385,11 +385,7 @@ function registerFormHandlers() {
           : "Savings goal saved"
       );
     });
-
-renderAll();
-
-showToast("Savings goal saved");
-    });
+  
     document
     .getElementById("savingsContributionForm")
     .addEventListener("submit", (event) => {
