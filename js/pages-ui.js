@@ -301,7 +301,73 @@ function renderCards() {
     })
     .join("");
 }
+function renderSavingsGoals() {
+  const list = document.getElementById(
+    "savingsGoalsList"
+  );
 
+  if (!state.savingsGoals.length) {
+    list.innerHTML = `
+      <div class="empty-state">
+        No savings goals yet.
+      </div>
+    `;
+
+    return;
+  }
+
+  list.className = "list";
+
+  list.innerHTML = state.savingsGoals
+    .map((goal) => {
+      const target = Number(
+        goal.targetAmount
+      );
+
+      const saved = Number(
+        goal.savedAmount
+      );
+
+      const progress =
+        target > 0
+          ? Math.min(
+              (saved / target) * 100,
+              100
+            )
+          : 0;
+
+      const dateText = goal.targetDate
+        ? `Target ${formatDate(goal.targetDate)}`
+        : "No target date";
+
+      return `
+        <div class="list-item">
+          <div class="item-main">
+            <div class="item-icon">
+              ◇
+            </div>
+
+            <div>
+              <p class="item-title">
+                ${escapeHtml(goal.name)}
+              </p>
+
+              <p class="item-meta">
+                ${currency(saved)} saved of
+                ${currency(target)}
+                · ${dateText}
+              </p>
+            </div>
+          </div>
+
+          <div class="item-value">
+            ${progress.toFixed(0)}%
+          </div>
+        </div>
+      `;
+    })
+    .join("");
+}
 function renderAll() {
   setGreeting();
   renderDashboard();
@@ -309,4 +375,5 @@ function renderAll() {
   renderPaychecks();
   renderBillsTable();
   renderCards();
+  renderSavingsGoals();
 }
