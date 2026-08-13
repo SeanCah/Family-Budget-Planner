@@ -24,10 +24,10 @@ Help families manage their finances from one easy-to-use dashboard.
 
 ## Roadmap
 
-- [ ] Dashboard
-- [ ] Expenses
-- [ ] Bills
-- [ ] Credit Cards
+- [x] Dashboard
+- [x] Expenses
+- [x] Bills
+- [x] Credit Cards
 - [x] Savings
-- [ ] Reports
+- [x] Reports
 - [ ] Family Accounts
