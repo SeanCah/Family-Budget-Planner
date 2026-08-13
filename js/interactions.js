@@ -295,7 +295,13 @@ if (savingsGoalDelete) {
   showToast("Savings goal removed");
 }
 });
-
+  
+document
+  .getElementById("reportMonthPicker")
+  .addEventListener("change", () => {
+    renderReportsSummary();
+  });
+  
 document.addEventListener(
   "keydown",
   (event) => {
