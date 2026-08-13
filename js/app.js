@@ -12,5 +12,12 @@ document.getElementById(
   7
 );
 
+document.getElementById(
+  "reportMonthPicker"
+).value = toDateInputValue(new Date()).slice(
+  0,
+  7
+);
+
 resetPaycheckForm();
 renderAll();
