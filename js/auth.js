@@ -13,6 +13,10 @@ function registerAuthHandlers() {
 
   const signOutButton =
   document.getElementById("signOutButton");
+  const resetPasswordButton =
+  document.getElementById(
+    "resetPasswordButton"
+  );
 
   if (
     !authForm ||
@@ -36,6 +40,10 @@ function registerAuthHandlers() {
     signOutButton.disabled = false;
   }
 
+  if (resetPasswordButton) {
+    resetPasswordButton.disabled = false;
+  }
+
   closeModal(authModal);
   return;
 }
@@ -49,9 +57,14 @@ if (signOutButton) {
   signOutButton.disabled = true;
 }
 
+if (resetPasswordButton) {
+  resetPasswordButton.disabled = true;
+}
+
 openModal("authModal");
   }
 );
+
 if (signOutButton) {
   signOutButton.addEventListener(
     "click",
@@ -69,6 +82,56 @@ if (signOutButton) {
         return;
       }
 
+      showToast("Signed out");
+    }
+  );
+}
+
+if (resetPasswordButton) {
+  resetPasswordButton.addEventListener(
+    "click",
+    async () => {
+      resetPasswordButton.disabled = true;
+
+      const {
+        data: { user },
+        error: userError
+      } =
+        await supabaseClient.auth.getUser();
+
+      if (userError || !user?.email) {
+        resetPasswordButton.disabled = false;
+
+        showToast(
+          "Could not find your account email."
+        );
+
+        return;
+      }
+
+      const { error } =
+        await supabaseClient.auth
+          .resetPasswordForEmail(
+            user.email,
+            {
+              redirectTo:
+                "https://seancah.github.io/Family-Budget-Planner/"
+            }
+          );
+
+      resetPasswordButton.disabled = false;
+
+      if (error) {
+        showToast(error.message);
+        return;
+      }
+
+      showToast(
+        "Password reset email sent."
+      );
+    }
+  );
+}
       showToast("Signed out");
     }
   );
