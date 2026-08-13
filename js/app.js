@@ -1,6 +1,7 @@
 registerInteractions();
 registerFormHandlers();
 registerAuthHandlers();
+registerHouseholdHandlers();
 
 document.getElementById(
   "transactionDate"
