@@ -458,6 +458,63 @@ function renderSavingsGoals() {
     })
     .join("");
 }
+function renderReportsSummary() {
+  const picker = document.getElementById(
+    "reportMonthPicker"
+  );
+
+  if (!picker) {
+    return;
+  }
+
+  const selectedMonth = picker.value;
+
+  const transactions =
+    state.transactions.filter(
+      (item) =>
+        String(item.date).slice(0, 7) ===
+        selectedMonth
+    );
+
+  const income = transactions
+    .filter(
+      (item) => item.type === "income"
+    )
+    .reduce(
+      (sum, item) =>
+        sum + Number(item.amount),
+      0
+    );
+
+  const expenses = transactions
+    .filter(
+      (item) => item.type === "expense"
+    )
+    .reduce(
+      (sum, item) =>
+        sum + Number(item.amount),
+      0
+    );
+
+  const netCashFlow =
+    income - expenses;
+
+  document.getElementById(
+    "reportIncomeTotal"
+  ).textContent = currency(income);
+
+  document.getElementById(
+    "reportExpenseTotal"
+  ).textContent = currency(expenses);
+
+  document.getElementById(
+    "reportNetCashFlow"
+  ).textContent = currency(netCashFlow);
+
+  document.getElementById(
+    "reportTransactionCount"
+  ).textContent = transactions.length;
+}
 function renderAll() {
   setGreeting();
   renderDashboard();
@@ -467,4 +524,5 @@ function renderAll() {
   renderCards();
   renderSavingsSummary();
   renderSavingsGoals();
+  renderReportsSummary();
 }
