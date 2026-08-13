@@ -608,6 +608,80 @@
       </button>
     </div>
   </article>
+  <article class="card panel">
+  <div class="panel-header">
+    <div>
+      <h3 class="panel-title">
+        Family Account
+      </h3>
+
+      <p class="panel-subtitle">
+        Create a family budget or join one with an invite code.
+      </p>
+    </div>
+  </div>
+
+  <div id="householdStatus">
+    <div class="empty-state">
+      No family account connected yet.
+    </div>
+  </div>
+
+  <form
+    class="form"
+    id="createHouseholdForm"
+  >
+    <div class="field">
+      <label for="householdName">
+        Family name
+      </label>
+
+      <input
+        id="householdName"
+        type="text"
+        maxlength="80"
+        placeholder="Cahuasqui Family"
+        required
+      />
+    </div>
+
+    <div class="form-actions">
+      <button
+        class="button button-primary"
+        type="submit"
+      >
+        Create family account
+      </button>
+    </div>
+  </form>
+
+  <form
+    class="form"
+    id="joinHouseholdForm"
+  >
+    <div class="field">
+      <label for="householdInviteCode">
+        Invite code
+      </label>
+
+      <input
+        id="householdInviteCode"
+        type="text"
+        placeholder="Paste invite code"
+        required
+      />
+    </div>
+
+    <div class="form-actions">
+      <button
+        class="button button-secondary"
+        type="submit"
+      >
+        Join family account
+      </button>
+    </div>
+  </form>
+</article>
 </section>
 
 </main>
