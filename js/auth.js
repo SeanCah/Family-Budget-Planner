@@ -7,6 +7,12 @@ function registerAuthHandlers() {
 
   const authMessage =
     document.getElementById("authMessage");
+  
+  const accountEmail =
+  document.getElementById("accountEmail");
+
+  const signOutButton =
+  document.getElementById("signOutButton");
 
   if (
     !authForm ||
@@ -21,14 +27,52 @@ function registerAuthHandlers() {
       document.getElementById("authModal");
 
     if (session) {
-      closeModal(authModal);
-      return;
-    }
+  if (accountEmail) {
+    accountEmail.textContent =
+      session.user.email;
+  }
 
-    openModal("authModal");
+  if (signOutButton) {
+    signOutButton.disabled = false;
+  }
+
+  closeModal(authModal);
+  return;
+}
+
+if (accountEmail) {
+  accountEmail.textContent =
+    "Not signed in";
+}
+
+if (signOutButton) {
+  signOutButton.disabled = true;
+}
+
+openModal("authModal");
   }
 );
+if (signOutButton) {
+  signOutButton.addEventListener(
+    "click",
+    async () => {
+      signOutButton.disabled = true;
 
+      const { error } =
+        await supabaseClient.auth.signOut({
+          scope: "local"
+        });
+
+      if (error) {
+        signOutButton.disabled = false;
+        showToast(error.message);
+        return;
+      }
+
+      showToast("Signed out");
+    }
+  );
+}
   function getCredentials() {
     return {
       email: document
