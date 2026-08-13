@@ -569,7 +569,78 @@ if (!categories.length) {
     })
     .join("");
 }
+const incomeSourceTotals = {};
 
+transactions
+  .filter(
+    (item) => item.type === "income"
+  )
+  .forEach((item) => {
+    const source =
+      item.name || "Other income";
+
+    incomeSourceTotals[source] =
+      (incomeSourceTotals[source] || 0) +
+      Number(item.amount);
+  });
+
+const incomeSources = Object.entries(
+  incomeSourceTotals
+).sort(
+  (a, b) => b[1] - a[1]
+);
+
+const incomeSourceList =
+  document.getElementById(
+    "reportIncomeSourceList"
+  );
+
+if (!incomeSources.length) {
+  incomeSourceList.className = "";
+
+  incomeSourceList.innerHTML = `
+    <div class="empty-state">
+      No income for this month.
+    </div>
+  `;
+} else {
+  incomeSourceList.className = "list";
+
+  incomeSourceList.innerHTML =
+    incomeSources
+      .map(([source, amount]) => {
+        const percentage =
+          income > 0
+            ? (amount / income) * 100
+            : 0;
+
+        return `
+          <div class="list-item">
+            <div class="item-main">
+              <div class="item-icon">
+                +
+              </div>
+
+              <div>
+                <p class="item-title">
+                  ${escapeHtml(source)}
+                </p>
+
+                <p class="item-meta">
+                  ${percentage.toFixed(0)}%
+                  of monthly income
+                </p>
+              </div>
+            </div>
+
+            <div class="item-value positive">
+              ${currency(amount)}
+            </div>
+          </div>
+        `;
+      })
+      .join("");
+}
   document.getElementById(
     "reportIncomeTotal"
   ).textContent = currency(income);
