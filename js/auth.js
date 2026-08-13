@@ -15,6 +15,19 @@ function registerAuthHandlers() {
   ) {
     return;
   }
+  supabaseClient.auth.onAuthStateChange(
+  (event, session) => {
+    const authModal =
+      document.getElementById("authModal");
+
+    if (session) {
+      closeModal(authModal);
+      return;
+    }
+
+    openModal("authModal");
+  }
+);
 
   function getCredentials() {
     return {
