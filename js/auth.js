@@ -13,9 +13,20 @@ function registerAuthHandlers() {
 
   const signOutButton =
   document.getElementById("signOutButton");
+  
   const resetPasswordButton =
   document.getElementById(
     "resetPasswordButton"
+  );
+
+  const passwordRecoveryForm =
+  document.getElementById(
+    "passwordRecoveryForm"
+  );
+
+const passwordRecoveryMessage =
+  document.getElementById(
+    "passwordRecoveryMessage"
   );
 
   if (
@@ -30,39 +41,50 @@ function registerAuthHandlers() {
     const authModal =
       document.getElementById("authModal");
 
+    if (event === "PASSWORD_RECOVERY") {
+      closeModal(authModal);
+
+      openModal(
+        "passwordRecoveryModal"
+      );
+
+      return;
+    }
+
     if (session) {
-  if (accountEmail) {
-    accountEmail.textContent =
-      session.user.email;
+      if (accountEmail) {
+        accountEmail.textContent =
+          session.user.email;
+      }
+
+      if (signOutButton) {
+        signOutButton.disabled = false;
+      }
+
+      if (resetPasswordButton) {
+        resetPasswordButton.disabled = false;
+      }
+
+      closeModal(authModal);
+      return;
+    }
+
+    if (accountEmail) {
+      accountEmail.textContent =
+        "Not signed in";
+    }
+
+    if (signOutButton) {
+      signOutButton.disabled = true;
+    }
+
+    if (resetPasswordButton) {
+      resetPasswordButton.disabled = true;
+    }
+
+    openModal("authModal");
   }
-
-  if (signOutButton) {
-    signOutButton.disabled = false;
-  }
-
-  if (resetPasswordButton) {
-    resetPasswordButton.disabled = false;
-  }
-
-  closeModal(authModal);
-  return;
-}
-
-if (accountEmail) {
-  accountEmail.textContent =
-    "Not signed in";
-}
-
-if (signOutButton) {
-  signOutButton.disabled = true;
-}
-
-if (resetPasswordButton) {
-  resetPasswordButton.disabled = true;
-}
-
-openModal("authModal");
-  }
+);
 );
 
 if (signOutButton) {
@@ -128,6 +150,65 @@ if (resetPasswordButton) {
 
       showToast(
         "Password reset email sent."
+      );
+    }
+  );
+}
+  if (passwordRecoveryForm) {
+  passwordRecoveryForm.addEventListener(
+    "submit",
+    async (event) => {
+      event.preventDefault();
+
+      const newPassword =
+        document.getElementById(
+          "newPassword"
+        ).value;
+
+      const confirmNewPassword =
+        document.getElementById(
+          "confirmNewPassword"
+        ).value;
+
+      if (
+        newPassword !==
+        confirmNewPassword
+      ) {
+        passwordRecoveryMessage.textContent =
+          "Passwords do not match.";
+
+        return;
+      }
+
+      passwordRecoveryMessage.textContent =
+        "Updating password...";
+
+      const { error } =
+        await supabaseClient.auth
+          .updateUser({
+            password: newPassword
+          });
+
+      if (error) {
+        passwordRecoveryMessage.textContent =
+          error.message;
+
+        return;
+      }
+
+      passwordRecoveryMessage.textContent =
+        "Password updated successfully.";
+
+      passwordRecoveryForm.reset();
+
+      closeModal(
+        document.getElementById(
+          "passwordRecoveryModal"
+        )
+      );
+
+      showToast(
+        "Password updated successfully."
       );
     }
   );
