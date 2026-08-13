@@ -63,12 +63,13 @@ document.addEventListener("click", (event) => {
   }
 
   if (
-    event.target.classList.contains(
-      "modal-backdrop"
-    )
-  ) {
-    closeModal(event.target);
-  }
+  event.target.classList.contains(
+    "modal-backdrop"
+  ) &&
+  event.target.id !== "authModal"
+) {
+  closeModal(event.target);
+}
 
   const transactionDelete =
     event.target.closest(
@@ -306,12 +307,16 @@ document.addEventListener(
   "keydown",
   (event) => {
     if (event.key === "Escape") {
-      document
-        .querySelectorAll(
-          ".modal-backdrop.open"
-        )
-        .forEach(closeModal);
-    }
+  document
+    .querySelectorAll(
+      ".modal-backdrop.open"
+    )
+    .forEach((modal) => {
+      if (modal.id !== "authModal") {
+        closeModal(modal);
+      }
+    });
+}
   }
 );
 }
