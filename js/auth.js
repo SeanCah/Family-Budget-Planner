@@ -81,12 +81,7 @@ if (signOutButton) {
         showToast(error.message);
         return;
       }
-
-      showToast("Signed out");
-    }
-  );
-}
-
+      
 if (resetPasswordButton) {
   resetPasswordButton.addEventListener(
     "click",
