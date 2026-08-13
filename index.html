@@ -379,23 +379,89 @@
     </div>
   </header>
 
-  <article class="card panel">
-    <div class="panel-header">
-      <div>
-        <h3 class="panel-title">
-          Financial reports
-        </h3>
+  <div class="paycheck-toolbar">
+  <div class="field month-control">
+    <label for="reportMonthPicker">
+      Report month
+    </label>
 
-        <p class="panel-subtitle">
-          Your monthly financial breakdowns and trends will appear here.
-        </p>
-      </div>
-    </div>
+    <input
+      id="reportMonthPicker"
+      type="month"
+    />
+  </div>
+</div>
 
-    <div class="empty-state">
-      Reports are being built.
-    </div>
+<div class="metric-grid">
+  <article class="card metric-card">
+    <span class="metric-label">
+      Income
+    </span>
+
+    <strong
+      class="metric-value"
+      id="reportIncomeTotal"
+    >
+      $0.00
+    </strong>
+
+    <span class="metric-detail">
+      Income received this month
+    </span>
   </article>
+
+  <article class="card metric-card">
+    <span class="metric-label">
+      Expenses
+    </span>
+
+    <strong
+      class="metric-value"
+      id="reportExpenseTotal"
+    >
+      $0.00
+    </strong>
+
+    <span class="metric-detail">
+      Spending this month
+    </span>
+  </article>
+
+  <article class="card metric-card">
+    <span class="metric-label">
+      Net cash flow
+    </span>
+
+    <strong
+      class="metric-value"
+      id="reportNetCashFlow"
+    >
+      $0.00
+    </strong>
+
+    <span class="metric-detail">
+      Income minus expenses
+    </span>
+  </article>
+
+  <article class="card metric-card">
+    <span class="metric-label">
+      Transactions
+    </span>
+
+    <strong
+      class="metric-value"
+      id="reportTransactionCount"
+    >
+      0
+    </strong>
+
+    <span class="metric-detail">
+      Entries during this month
+    </span>
+  </article>
+</div>
+        
 </section>
     </main>
   </div>
