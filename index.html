@@ -975,6 +975,79 @@
 </div>
   <div
   class="modal-backdrop"
+    <div
+  class="modal-backdrop"
+  id="passwordRecoveryModal"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="passwordRecoveryTitle"
+>
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <p class="eyebrow">
+          Account security
+        </p>
+
+        <h3
+          class="modal-title"
+          id="passwordRecoveryTitle"
+        >
+          Choose a new password
+        </h3>
+      </div>
+    </div>
+
+    <form
+      class="form"
+      id="passwordRecoveryForm"
+    >
+      <div class="field">
+        <label for="newPassword">
+          New password
+        </label>
+
+        <input
+          id="newPassword"
+          type="password"
+          autocomplete="new-password"
+          minlength="6"
+          required
+        />
+      </div>
+
+      <div class="field">
+        <label for="confirmNewPassword">
+          Confirm new password
+        </label>
+
+        <input
+          id="confirmNewPassword"
+          type="password"
+          autocomplete="new-password"
+          minlength="6"
+          required
+        />
+      </div>
+
+      <p
+        class="help-text"
+        id="passwordRecoveryMessage"
+      >
+        Enter your new Ledger password.
+      </p>
+
+      <div class="form-actions">
+        <button
+          class="button button-primary"
+          type="submit"
+        >
+          Update password
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
   id="authModal"
   role="dialog"
   aria-modal="true"
