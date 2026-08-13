@@ -498,6 +498,77 @@ function renderReportsSummary() {
 
   const netCashFlow =
     income - expenses;
+  const categoryTotals = {};
+
+transactions
+  .filter(
+    (item) => item.type === "expense"
+  )
+  .forEach((item) => {
+    const category =
+      item.category || "Uncategorized";
+
+    categoryTotals[category] =
+      (categoryTotals[category] || 0) +
+      Number(item.amount);
+  });
+
+const categories = Object.entries(
+  categoryTotals
+).sort(
+  (a, b) => b[1] - a[1]
+);
+
+const categoryList =
+  document.getElementById(
+    "reportCategoryList"
+  );
+
+if (!categories.length) {
+  categoryList.className = "";
+
+  categoryList.innerHTML = `
+    <div class="empty-state">
+      No expenses for this month.
+    </div>
+  `;
+} else {
+  categoryList.className = "list";
+
+  categoryList.innerHTML = categories
+    .map(([category, amount]) => {
+      const percentage =
+        expenses > 0
+          ? (amount / expenses) * 100
+          : 0;
+
+      return `
+        <div class="list-item">
+          <div class="item-main">
+            <div class="item-icon">
+              $
+            </div>
+
+            <div>
+              <p class="item-title">
+                ${escapeHtml(category)}
+              </p>
+
+              <p class="item-meta">
+                ${percentage.toFixed(0)}%
+                of monthly spending
+              </p>
+            </div>
+          </div>
+
+          <div class="item-value">
+            ${currency(amount)}
+          </div>
+        </div>
+      `;
+    })
+    .join("");
+}
 
   document.getElementById(
     "reportIncomeTotal"
