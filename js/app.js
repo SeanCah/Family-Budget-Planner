@@ -1,5 +1,6 @@
 registerInteractions();
 registerFormHandlers();
+registerAuthHandlers();
 
 document.getElementById(
   "transactionDate"
