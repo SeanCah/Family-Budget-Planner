@@ -82,11 +82,10 @@ const passwordRecoveryMessage =
       resetPasswordButton.disabled = true;
     }
 
-    openModal("authModal");
+        openModal("authModal");
   }
 );
-);
-
+  
 if (signOutButton) {
   signOutButton.addEventListener(
     "click",
