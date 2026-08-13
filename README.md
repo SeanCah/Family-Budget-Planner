@@ -28,6 +28,6 @@ Help families manage their finances from one easy-to-use dashboard.
 - [ ] Expenses
 - [ ] Bills
 - [ ] Credit Cards
-- [ ] Savings
+- [x] Savings
 - [ ] Reports
 - [ ] Family Accounts
