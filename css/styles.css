@@ -610,7 +610,9 @@
       color: var(--muted);
       font-size: 20px;
     }
-
+      [hidden] {
+        display: none !important;
+      }
     .form {
       padding: 12px 22px 22px;
       display: grid;
