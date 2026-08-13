@@ -641,6 +641,109 @@ if (!incomeSources.length) {
       })
       .join("");
 }
+  const [
+  selectedYear,
+  selectedMonthNumber
+] = selectedMonth
+  .split("-")
+  .map(Number);
+
+const trendMonths = [];
+
+for (let i = 5; i >= 0; i -= 1) {
+  const date = new Date(
+    selectedYear,
+    selectedMonthNumber - 1 - i,
+    1
+  );
+
+  const year = date.getFullYear();
+
+  const monthNumber = String(
+    date.getMonth() + 1
+  ).padStart(2, "0");
+
+  const monthKey =
+    `${year}-${monthNumber}`;
+
+  const monthTransactions =
+    state.transactions.filter(
+      (item) =>
+        String(item.date).slice(0, 7) ===
+        monthKey
+    );
+
+  const monthIncome =
+    monthTransactions
+      .filter(
+        (item) =>
+          item.type === "income"
+      )
+      .reduce(
+        (sum, item) =>
+          sum + Number(item.amount),
+        0
+      );
+
+  const monthExpenses =
+    monthTransactions
+      .filter(
+        (item) =>
+          item.type === "expense"
+      )
+      .reduce(
+        (sum, item) =>
+          sum + Number(item.amount),
+        0
+      );
+
+  trendMonths.push({
+    label: date.toLocaleDateString(
+      "en-US",
+      {
+        month: "short",
+        year: "numeric"
+      }
+    ),
+    income: monthIncome,
+    expenses: monthExpenses,
+    net: monthIncome - monthExpenses
+  });
+}
+
+const trendList =
+  document.getElementById(
+    "reportTrendList"
+  );
+
+trendList.className = "list";
+
+trendList.innerHTML = trendMonths
+  .map((month) => `
+    <div class="list-item">
+      <div class="item-main">
+        <div class="item-icon">
+          ↕
+        </div>
+
+        <div>
+          <p class="item-title">
+            ${month.label}
+          </p>
+
+          <p class="item-meta">
+            Income ${currency(month.income)}
+            · Expenses ${currency(month.expenses)}
+          </p>
+        </div>
+      </div>
+
+      <div class="item-value">
+        Net ${currency(month.net)}
+      </div>
+    </div>
+  `)
+  .join("");
   document.getElementById(
     "reportIncomeTotal"
   ).textContent = currency(income);
