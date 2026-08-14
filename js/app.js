@@ -21,4 +21,3 @@ document.getElementById(
 );
 
 resetPaycheckForm();
-renderAll();
