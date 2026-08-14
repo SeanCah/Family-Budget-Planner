@@ -41,8 +41,8 @@ function normalizePersonalFinancialData(
 }
 window.savePersonalFinancialData =
   async function savePersonalFinancialData() {
-    if (!window.personalCloudDataReady) {
-      return;
+        if (!window.personalCloudDataReady) {
+      return false;
     }
     const {
       data: { session },
@@ -50,11 +50,11 @@ window.savePersonalFinancialData =
     } =
       await supabaseClient.auth.getSession();
 
-    if (
+        if (
       sessionError ||
       !session?.user?.id
     ) {
-      return;
+      return false;
     }
 
         const {
@@ -89,8 +89,10 @@ window.savePersonalFinancialData =
         "Cloud sync failed. Your browser copy is still saved."
       );
 
-      return;
+      return false;
     }
+
+    return true;
   };
 window.loadPersonalFinancialData =
   async function loadPersonalFinancialData(
