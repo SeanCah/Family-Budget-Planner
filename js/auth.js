@@ -1,4 +1,6 @@
 function registerAuthHandlers() {
+  let financialDataUserId = null;
+  
   const authForm =
     document.getElementById("authForm");
 
@@ -65,11 +67,31 @@ const passwordRecoveryMessage =
         resetPasswordButton.disabled = false;
       }
 
-      closeModal(authModal);
+            closeModal(authModal);
+
+      if (
+        financialDataUserId !==
+          session.user.id &&
+        typeof window
+          .loadPersonalFinancialData ===
+          "function"
+      ) {
+        financialDataUserId =
+          session.user.id;
+
+        setTimeout(() => {
+          window.loadPersonalFinancialData(
+            session.user
+          );
+        }, 0);
+      }
+
       return;
     }
 
     if (accountEmail) {
+      financialDataUserId = null;
+      
       accountEmail.textContent =
         "Not signed in";
     }
