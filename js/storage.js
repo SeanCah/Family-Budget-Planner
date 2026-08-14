@@ -128,4 +128,13 @@ window.saveState = function saveState() {
     window.STORAGE_KEY,
     JSON.stringify(window.state)
   );
+
+  if (
+    typeof window
+      .savePersonalFinancialData ===
+      "function"
+  ) {
+    void window
+      .savePersonalFinancialData();
+  }
 };
