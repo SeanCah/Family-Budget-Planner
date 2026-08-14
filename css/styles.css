@@ -825,4 +825,21 @@
       .credit-card {
         padding: 18px;
       }
+          #authModal {
+  padding: 12px;
+}
+
+#authModal .modal {
+  width: 100%;
+  max-height: calc(100dvh - 24px);
+}
+
+#authModal .form-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+#authModal .form-actions .button {
+  width: 100%;
+}
     }
