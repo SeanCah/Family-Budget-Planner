@@ -38,7 +38,53 @@ function normalizePersonalFinancialData(
         : []
   };
 }
+window.savePersonalFinancialData =
+  async function savePersonalFinancialData() {
+    const {
+      data: { session },
+      error: sessionError
+    } =
+      await supabaseClient.auth.getSession();
 
+    if (
+      sessionError ||
+      !session?.user?.id
+    ) {
+      return;
+    }
+
+    const { error } =
+      await supabaseClient
+        .from("user_financial_data")
+        .upsert(
+          {
+            user_id:
+              session.user.id,
+
+            data:
+              normalizePersonalFinancialData(
+                window.state
+              ),
+
+            updated_at:
+              new Date().toISOString()
+          },
+          {
+            onConflict: "user_id"
+          }
+        );
+
+    if (error) {
+      console.error(
+        "Could not save cloud data",
+        error
+      );
+
+      showToast(
+        "Browser data saved, but cloud sync failed."
+      );
+    }
+  };
 window.loadPersonalFinancialData =
   async function loadPersonalFinancialData(
     user
