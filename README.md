@@ -30,4 +30,5 @@ Help families manage their finances from one easy-to-use dashboard.
 - [x] Credit Cards
 - [x] Savings
 - [x] Reports
-- [x] Family Accounts
+- [x] Personal Account Sign-In
+- [x] Personal Cloud Sync
