@@ -60,8 +60,62 @@ const passwordRecoveryMessage =
       }
 
       if (signOutButton) {
-        signOutButton.disabled = false;
+  signOutButton.addEventListener(
+    "click",
+    async () => {
+      signOutButton.disabled = true;
+
+      let cloudSaved = false;
+
+      if (
+        typeof window
+          .savePersonalFinancialData ===
+          "function"
+      ) {
+        cloudSaved =
+          await window
+            .savePersonalFinancialData();
       }
+
+      const { error } =
+        await supabaseClient.auth.signOut({
+          scope: "local"
+        });
+
+      if (error) {
+        signOutButton.disabled = false;
+        showToast(error.message);
+        return;
+      }
+
+      if (cloudSaved) {
+        localStorage.removeItem(
+          window.STORAGE_KEY
+        );
+
+        window.personalCloudDataReady =
+          false;
+
+        window.state = {
+          transactions: [],
+          paychecks: [],
+          bills: [],
+          cards: [],
+          savingsGoals: []
+        };
+
+        renderAll();
+
+        showToast("Signed out");
+        return;
+      }
+
+      showToast(
+        "Signed out. Browser copy kept because cloud sync was not confirmed."
+      );
+    }
+  );
+}
 
       if (resetPasswordButton) {
         resetPasswordButton.disabled = false;
