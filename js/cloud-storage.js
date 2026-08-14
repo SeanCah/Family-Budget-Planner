@@ -148,19 +148,10 @@ window.loadPersonalFinancialData =
       return;
     }
 
-    const savedLocalData =
-      localStorage.getItem(
-        window.STORAGE_KEY
+        const initialState =
+      normalizePersonalFinancialData(
+        {}
       );
-
-    const initialState =
-      savedLocalData
-        ? normalizePersonalFinancialData(
-            window.state
-          )
-        : normalizePersonalFinancialData(
-            {}
-          );
 
     const { error: createError } =
       await supabaseClient
