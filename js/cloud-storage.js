@@ -1,4 +1,8 @@
 window.personalCloudDataReady = false;
+
+let personalCloudSaveQueue =
+  Promise.resolve();
+
 function normalizePersonalFinancialData(
   data
 ) {
@@ -40,59 +44,75 @@ function normalizePersonalFinancialData(
   };
 }
 window.savePersonalFinancialData =
-  async function savePersonalFinancialData() {
-        if (!window.personalCloudDataReady) {
-      return false;
-    }
-    const {
-      data: { session },
-      error: sessionError
-    } =
-      await supabaseClient.auth.getSession();
-
-        if (
-      sessionError ||
-      !session?.user?.id
-    ) {
-      return false;
+  function savePersonalFinancialData() {
+    if (!window.personalCloudDataReady) {
+      return Promise.resolve(false);
     }
 
-        const {
-      data: savedRow,
-      error
-    } =
-      await supabaseClient
-        .from("user_financial_data")
-        .update({
-          data:
-            normalizePersonalFinancialData(
-              window.state
-            ),
+    const stateSnapshot =
+      normalizePersonalFinancialData(
+        structuredClone(window.state)
+      );
 
-          updated_at:
-            new Date().toISOString()
-        })
-        .eq(
-          "user_id",
-          session.user.id
-        )
-        .select("user_id")
-        .maybeSingle();
+    const runSave = async () => {
+      const {
+        data: { session },
+        error: sessionError
+      } =
+        await supabaseClient.auth.getSession();
 
-    if (error || !savedRow) {
-      console.error(
-        "Could not save cloud data",
+      if (
+        sessionError ||
+        !session?.user?.id
+      ) {
+        return false;
+      }
+
+      const {
+        data: savedRow,
         error
+      } =
+        await supabaseClient
+          .from("user_financial_data")
+          .update({
+            data: stateSnapshot,
+
+            updated_at:
+              new Date().toISOString()
+          })
+          .eq(
+            "user_id",
+            session.user.id
+          )
+          .select("user_id")
+          .maybeSingle();
+
+      if (error || !savedRow) {
+        console.error(
+          "Could not save cloud data",
+          error
+        );
+
+        showToast(
+          "Cloud sync failed. Your browser copy is still saved."
+        );
+
+        return false;
+      }
+
+      return true;
+    };
+
+    const savePromise =
+      personalCloudSaveQueue.then(
+        runSave,
+        runSave
       );
 
-      showToast(
-        "Cloud sync failed. Your browser copy is still saved."
-      );
+    personalCloudSaveQueue =
+      savePromise.catch(() => {});
 
-      return false;
-    }
-
-    return true;
+    return savePromise;
   };
 window.loadPersonalFinancialData =
   async function loadPersonalFinancialData(
