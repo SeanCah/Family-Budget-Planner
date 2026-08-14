@@ -66,7 +66,9 @@ document.addEventListener("click", (event) => {
   event.target.classList.contains(
     "modal-backdrop"
   ) &&
-  event.target.id !== "authModal"
+  event.target.id !== "authModal" &&
+  event.target.id !==
+    "passwordRecoveryModal"
 ) {
   closeModal(event.target);
 }
@@ -312,9 +314,12 @@ document.addEventListener(
       ".modal-backdrop.open"
     )
     .forEach((modal) => {
-      if (modal.id !== "authModal") {
-        closeModal(modal);
-      }
+     if (
+  modal.id !== "authModal" &&
+  modal.id !== "passwordRecoveryModal"
+) {
+  closeModal(modal);
+}
     });
 }
   }
