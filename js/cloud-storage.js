@@ -1,3 +1,4 @@
+window.personalCloudDataReady = false;
 function normalizePersonalFinancialData(
   data
 ) {
@@ -40,6 +41,9 @@ function normalizePersonalFinancialData(
 }
 window.savePersonalFinancialData =
   async function savePersonalFinancialData() {
+    if (!window.personalCloudDataReady) {
+      return;
+    }
     const {
       data: { session },
       error: sessionError
@@ -92,7 +96,9 @@ window.loadPersonalFinancialData =
     if (!user?.id) {
       return;
     }
-
+    
+    window.personalCloudDataReady = false;
+    
     const {
       data: cloudRow,
       error: loadError
@@ -125,12 +131,14 @@ window.loadPersonalFinancialData =
           cloudRow.data
         );
 
-      localStorage.setItem(
+            localStorage.setItem(
         window.STORAGE_KEY,
         JSON.stringify(
           window.state
         )
       );
+
+      window.personalCloudDataReady = true;
 
       renderAll();
 
@@ -175,12 +183,14 @@ window.loadPersonalFinancialData =
     window.state =
       initialState;
 
-    localStorage.setItem(
+        localStorage.setItem(
       window.STORAGE_KEY,
       JSON.stringify(
         window.state
       )
     );
+
+    window.personalCloudDataReady = true;
 
     renderAll();
 
