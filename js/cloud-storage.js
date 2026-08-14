@@ -57,36 +57,39 @@ window.savePersonalFinancialData =
       return;
     }
 
-    const { error } =
+        const {
+      data: savedRow,
+      error
+    } =
       await supabaseClient
         .from("user_financial_data")
-        .upsert(
-          {
-            user_id:
-              session.user.id,
+        .update({
+          data:
+            normalizePersonalFinancialData(
+              window.state
+            ),
 
-            data:
-              normalizePersonalFinancialData(
-                window.state
-              ),
+          updated_at:
+            new Date().toISOString()
+        })
+        .eq(
+          "user_id",
+          session.user.id
+        )
+        .select("user_id")
+        .maybeSingle();
 
-            updated_at:
-              new Date().toISOString()
-          },
-          {
-            onConflict: "user_id"
-          }
-        );
-
-    if (error) {
+    if (error || !savedRow) {
       console.error(
         "Could not save cloud data",
         error
       );
 
       showToast(
-        "Browser data saved, but cloud sync failed."
+        "Cloud sync failed. Your browser copy is still saved."
       );
+
+      return;
     }
   };
 window.loadPersonalFinancialData =
