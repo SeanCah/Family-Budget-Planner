@@ -756,7 +756,7 @@
       }
 
       main {
-        padding: 24px 18px 92px;
+        padding: 24px 18px 150px;
       }
 
       .content-grid {
@@ -770,7 +770,7 @@
         bottom: 12px;
         z-index: 40;
         display: grid;
-        grid-template-columns: repeat(7, 1fr);
+        grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: 6px;
         padding: 8px;
         border: 1px solid var(--line);
