@@ -58,8 +58,57 @@ const passwordRecoveryMessage =
         accountEmail.textContent =
           session.user.email;
       }
-
+      
       if (signOutButton) {
+        signOutButton.disabled = false;
+      }
+      
+      if (resetPasswordButton) {
+        resetPasswordButton.disabled = false;
+      }
+
+            closeModal(authModal);
+
+      if (
+        financialDataUserId !==
+          session.user.id &&
+        typeof window
+          .loadPersonalFinancialData ===
+          "function"
+      ) {
+        financialDataUserId =
+          session.user.id;
+
+        setTimeout(() => {
+          window.loadPersonalFinancialData(
+            session.user
+          );
+        }, 0);
+      }
+
+      return;
+    }
+
+    if (accountEmail) {
+      financialDataUserId = null;
+      
+      accountEmail.textContent =
+        "Not signed in";
+    }
+
+    if (signOutButton) {
+      signOutButton.disabled = true;
+    }
+
+    if (resetPasswordButton) {
+      resetPasswordButton.disabled = true;
+    }
+
+        openModal("authModal");
+  }
+);
+  
+if (signOutButton) {
   signOutButton.addEventListener(
     "click",
     async () => {
@@ -113,73 +162,6 @@ const passwordRecoveryMessage =
       showToast(
         "Signed out. Browser copy kept because cloud sync was not confirmed."
       );
-    }
-  );
-}
-
-      if (resetPasswordButton) {
-        resetPasswordButton.disabled = false;
-      }
-
-            closeModal(authModal);
-
-      if (
-        financialDataUserId !==
-          session.user.id &&
-        typeof window
-          .loadPersonalFinancialData ===
-          "function"
-      ) {
-        financialDataUserId =
-          session.user.id;
-
-        setTimeout(() => {
-          window.loadPersonalFinancialData(
-            session.user
-          );
-        }, 0);
-      }
-
-      return;
-    }
-
-    if (accountEmail) {
-      financialDataUserId = null;
-      
-      accountEmail.textContent =
-        "Not signed in";
-    }
-
-    if (signOutButton) {
-      signOutButton.disabled = true;
-    }
-
-    if (resetPasswordButton) {
-      resetPasswordButton.disabled = true;
-    }
-
-        openModal("authModal");
-  }
-);
-  
-if (signOutButton) {
-  signOutButton.addEventListener(
-    "click",
-    async () => {
-      signOutButton.disabled = true;
-
-      const { error } =
-        await supabaseClient.auth.signOut({
-          scope: "local"
-        });
-
-      if (error) {
-        signOutButton.disabled = false;
-        showToast(error.message);
-        return;
-      }
-
-      showToast("Signed out");
     }
   );
 }
