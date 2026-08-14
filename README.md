@@ -30,4 +30,4 @@ Help families manage their finances from one easy-to-use dashboard.
 - [x] Credit Cards
 - [x] Savings
 - [x] Reports
-- [ ] Family Accounts
+- [x] Family Accounts
